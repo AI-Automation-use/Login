@@ -26,7 +26,7 @@ your-project/
   - Hover effects
 - Secure token storage in `st.session_state`
 
-### 🧠 Main App (from `app_main.py`)
+### 🧠 Main App (from `main_app.py`)
 - Prompt input interface using LangGraph + Azure OpenAI
 - Dynamic tool loading via `MultiServerMCPClient`
 - Sidebar showing available tools
