@@ -39,7 +39,7 @@ def load_mcp_tools():
 def load_chat_model():
     return AzureChatOpenAI(
         azure_endpoint="https://insightgen.openai.azure.com/",
-        api_key="...",
+        api_key="54de899334ca4850b3f71da993dd0346",
         api_version="2024-05-01-preview",
         deployment_name="gpt-4o-mini",
         model="gpt-4o"

@@ -13,7 +13,10 @@ AUTHORITY = f"https://login.microsoftonline.com/{TENANT_ID}"
 SCOPE = ["User.Read"]
 REDIRECT_URI = "http://localhost:8501"
 SESSION_TIMEOUT = 3600  # 1 hour
-
+ALLOWED_USERS = [
+    "guru.km@sonata-software.com",
+    "rpa.uat.bot1@sonata-software.com"
+]
 # MSAL helpers
 def create_msal_app():
     return msal.ConfidentialClientApplication(
@@ -31,7 +34,19 @@ def login_url():
 
 def get_token_from_code(auth_code):
     app = create_msal_app()
-    return app.acquire_token_by_authorization_code(auth_code, scopes=SCOPE, redirect_uri=REDIRECT_URI)
+    result = app.acquire_token_by_authorization_code(
+        auth_code,
+        scopes=SCOPE,
+        redirect_uri=REDIRECT_URI
+    )
+    if "id_token_claims" not in result:
+        from msal.token_cache import TokenCache
+        id_token = result.get("id_token")
+        if id_token:
+            import jwt
+            result["id_token_claims"] = jwt.decode(id_token, options={"verify_signature": False})
+    return result
+
 
 # Session setup
 def setup_session():
@@ -52,11 +67,25 @@ def handle_auth_flow():
     auth_code = st.query_params.get("code")
     if auth_code and not st.session_state.logged_in:
         result = get_token_from_code(auth_code)
+
         if result and "access_token" in result:
+            id_claims = result.get("id_token_claims", {})
+            user_email = id_claims.get("preferred_username") or id_claims.get("email")
+
+            if not user_email:
+                st.error("Login failed: Could not retrieve email.")
+                st.stop()
+
+            if user_email.lower() not in [u.lower() for u in ALLOWED_USERS]:
+                st.error(f"Access denied for user: {user_email}")
+                st.stop()
+
+            # All good
             st.session_state.logged_in = True
-            st.session_state.token = result['access_token']
+            st.session_state.token = result["access_token"]
             st.session_state.login_time = time.time()
             st.experimental_rerun()
+
 
 # UI for login page
 def render_login_page():

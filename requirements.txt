@@ -1,0 +1,8 @@
+streamlit
+langchain
+langgraph
+langchain_openai
+langchain_core
+msal
+python-dotenv
+asyncio
