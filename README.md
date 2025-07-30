@@ -26,6 +26,15 @@ your-project/
   - Hover effects
 - Secure token storage in `st.session_state`
 
+### 🔐 User-Level Authentication
+- Restrict access to specific users by:
+
+  - Storing allowed email addresses directly in code(ALLOWED_USERS[])
+
+  - OR dynamically checking against a list in Azure Table Storage or a database(Should be configured if required)
+
+- Unauthorized users are shown a clear error message and access is denied
+
 ### 🧠 Main App (from `main_app.py`)
 - Prompt input interface using LangGraph + Azure OpenAI
 - Dynamic tool loading via `MultiServerMCPClient`
