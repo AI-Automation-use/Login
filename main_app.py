@@ -8,17 +8,24 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage
 from prompts import SYSTEM_PROMPT
 
-from login_handler import setup_session, handle_auth_flow, render_login_page
+from login_handler import setup_session, handle_auth_flow, ensure_not_expired, render_login_page, render_request_access_page
 
 # --------------------------
 # Session & Authentication
 # --------------------------
 setup_session()
 handle_auth_flow()
+ensure_not_expired()
 
 if not st.session_state.logged_in:
-    render_login_page()
-    st.stop()
+    if st.session_state.get("access_denied_email"):
+        # User authenticated but not allowlisted → show Request Access flow
+        render_request_access_page()
+        st.stop()
+    else:
+        # Normal login screen
+        render_login_page()
+        st.stop()
 
 # --------------------------
 # Post-Login Application
