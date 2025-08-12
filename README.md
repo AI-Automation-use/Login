@@ -53,6 +53,8 @@ your-project/
 ### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
+```
+### 2. Create .env File
 
 ```env
 # Azure AD (login + Graph mail send)
