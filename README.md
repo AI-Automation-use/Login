@@ -153,4 +153,4 @@ Make sure your deployment includes the following files:
 
 ## 📜 License
 
-This project is provided for educational and internal use only. Use at your own discretion.
+This project is provided for educational and internal use only. Use at your own discretion!.
